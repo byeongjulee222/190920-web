@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <h1 class="text-center">DETAIL</h1>
+  <h2>{{ question.pk }} 번째 글</h2>
+  <hr>
+  <p>제목: {{ question.title }}</p>
+  <p>내용: {{ question.issue_a }}</p>
+  {% if question.image_a %}
+    <img src="{{ question.image_a.url }}" alt="{{ question.url }}">
+  {% endif %}
+
+  <p>내용: {{ question.issue_b }}</p>
+  {% if question.image_b %}
+    <img src="{{ question.image_b.url }}" alt="{{ question.url }}">
+  {% endif %}
+  <hr>
+  <h4>댓글</h4><hr>
+
+  {% for answer in answers %}
+  	<li>{{ answer.comment }}
+      <form action="{% url 'eithers:comment_delete' question.pk answer.pk %}"style="display: inline;" method="POST">
+        {% csrf_token %}
+        <input type="submit" value="DELETE">
+      </form>
+    </li>
+  {% empty %}
+    <p><b>작성된 댓글이 없습니다.</b></p>
+    <hr>
+  {% endfor %}
+  
+  <form action="{% url 'eithers:answer_create' question.pk %}" method="POST">
+    {% csrf_token %}
+  
+    <input type="radio" name="pick" id="" value=0> issue_a
+    <input type="radio" name="pick" id="" value=1> issue_b
+    <label for="comment">COMMENT</label>
+    <input type="text" name="comment"> 
+    <input type="submit" value="SUBMIT">
+  </form>
+  
+  <hr>
+  <div class="progress">
+    <div class="progress-bar bg-danger" role="progressbar" style="width: {{ result }}%" aria-valuemax="100">{{ result }}%</div>
+    <div class="progress-bar bg-info" role="progressbar" style="width: {{ result2 }}%" aria-valuemax="100">{{ result2 }}%</div>
+  </div>
+
+  <a href="{% url 'eithers:index' %}">[BACK]</a>
+
+{% endblock content %}
